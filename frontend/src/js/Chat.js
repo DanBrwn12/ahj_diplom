@@ -1,6 +1,9 @@
 import emojis from './emojis';
 import parseEmojis from './parseEmojis';
 
+const API_URL = 'https://ahj_diplom.onrender.com';
+const WS_URL = 'wss://ahj_diplom.onrender.com';
+
 export default class Chat {
   constructor(root) {
     this.root = root;
@@ -110,7 +113,7 @@ export default class Chat {
   }
 
   connectWebSocket() {
-    this.ws = new WebSocket('ws://localhost:7070');
+    this.ws = new WebSocket(WS_URL);
 
     this.ws.addEventListener('message', (event) => {
       this.handleServerEvent(event.data);
@@ -152,7 +155,7 @@ export default class Chat {
 
     try {
       const response = await fetch(
-        `http://localhost:7070/api/messages?offset=0&limit=${this.limit}`,
+        `${API_URL}/api/messages?offset=0&limit=${this.limit}`,
       );
       const data = await response.json();
 
@@ -179,7 +182,7 @@ export default class Chat {
 
     try {
       const response = await fetch(
-        `http://localhost:7070/api/messages?offset=${this.offset}&limit=${this.limit}`,
+        `${API_URL}/api/messages?offset=${this.offset}&limit=${this.limit}`,
       );
       const data = await response.json();
 
@@ -217,7 +220,7 @@ export default class Chat {
   async performSearch(query) {
     try {
       const response = await fetch(
-        `http://localhost:7070/api/messages/search?q=${encodeURIComponent(query)}`,
+        `${API_URL}/api/messages/search?q=${encodeURIComponent(query)}`,
       );
       const data = await response.json();
 
@@ -255,7 +258,7 @@ export default class Chat {
     this.input.value = '';
 
     try {
-      await fetch('http://localhost:7070/api/messages', {
+      await fetch(`${API_URL}/api/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content }),
@@ -270,7 +273,7 @@ export default class Chat {
     formData.append('file', file);
 
     try {
-      await fetch('http://localhost:7070/api/files', {
+      await fetch(`${API_URL}/api/files`, {
         method: 'POST',
         body: formData,
       });
@@ -293,7 +296,7 @@ export default class Chat {
         };
 
         try {
-          await fetch('http://localhost:7070/api/messages', {
+          await fetch(`${API_URL}/api/messages`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type: 'location', content }),
@@ -342,7 +345,7 @@ export default class Chat {
 
   async pinMessage(messageId) {
     try {
-      await fetch(`http://localhost:7070/api/messages/${messageId}/pin`, {
+      await fetch(`${API_URL}/api/messages/${messageId}/pin`, {
         method: 'POST',
       });
     } catch (error) {
@@ -352,7 +355,7 @@ export default class Chat {
 
   async unpinMessage() {
     try {
-      await fetch(`http://localhost:7070/api/messages/${this.pinnedId}/unpin`, {
+      await fetch(`${API_URL}/api/messages/${this.pinnedId}/unpin`, {
         method: 'POST',
       });
     } catch (error) {
@@ -445,7 +448,7 @@ export default class Chat {
 
   createFileContent(message) {
     const { mime, url, name } = message.content;
-    const fullUrl = `http://localhost:7070${url}`;
+    const fullUrl = `${API_URL}${url}`;
     const container = document.createElement('div');
     container.classList.add('file');
 
@@ -477,7 +480,7 @@ export default class Chat {
 
       const link = document.createElement('a');
       link.classList.add('file__link');
-      link.href = `http://localhost:7070/api/files/${message.id}`;
+      link.href = `${API_URL}/api/files/${message.id}`;
       link.textContent = 'Скачать';
 
       downloadEl.append(nameEl, link);
