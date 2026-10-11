@@ -432,7 +432,7 @@ export default class Chat {
     const container = document.createElement('div');
 
     if (message.type === 'text') {
-      container.textContent = parseEmojis(message.content);
+      container.append(this.createTextContent(message.content));
     }
 
     if (message.type === 'file') {
@@ -441,6 +441,29 @@ export default class Chat {
 
     if (message.type === 'location') {
       container.append(this.createLocationContent(message));
+    }
+
+    return container;
+  }
+
+  createTextContent(text) {
+    const container = document.createElement('span');
+    const parsed = parseEmojis(text);
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = parsed.split(urlRegex);
+
+    for (const part of parts) {
+      if (urlRegex.test(part)) {
+        const link = document.createElement('a');
+        link.classList.add('message__link');
+        link.href = part;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = part;
+        container.append(link);
+      } else if (part) {
+        container.append(document.createTextNode(part));
+      }
     }
 
     return container;
