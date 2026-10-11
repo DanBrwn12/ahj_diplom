@@ -1,8 +1,8 @@
 import emojis from './emojis';
 import parseEmojis from './parseEmojis';
 
-const API_URL = 'https://ahj_diplom.onrender.com';
-const WS_URL = 'wss://ahj_diplom.onrender.com';
+const API_URL = 'https://ahj-diplom.onrender.com';
+const WS_URL = 'wss://ahj-diplom.onrender.com';
 
 export default class Chat {
   constructor(root) {
